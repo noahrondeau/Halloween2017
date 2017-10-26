@@ -1,43 +1,29 @@
 
 
-// these constants won't change:
+// constants
 const int sensor = A0; // the piezo is connected to analog pin 0
-const int LED1 = 2;
-const int LED2 = 4;
-const int LED3 = 7;
-const int LED4 = 8;
-const int LED5 = 10;
-
-const int led1Thresh = 10;
-const int led2Thresh = 20;
-const int led3Thresh = 30;
-const int led4Thresh = 40;
-const int led5Thresh = 50;
+const int colWidth = 2;
+const int colHeight = 5;
+const int ledPins[colWidth][colHeight] = {{2,3,4,5,6},{8,9,10,11,12}}; //GPIO pins used for LED matrix
+const int ledThreshold[colHeight] = {10,20,30,40,50}; // analog value thresholds for led activation
 
 
 // these variables will change:
 int sensorReading = 0;      // variable to store the value read from the sensor pin
-int led1State = LOW;
-int led2State = LOW;
-int led3State = LOW;
-int led4State = LOW;
-int led5State = LOW;
 
 void setup()
 {
-  pinMode(LED1, OUTPUT);
-  pinMode(LED2, OUTPUT);
-  pinMode(LED3, OUTPUT);
-  pinMode(LED4, OUTPUT);
-  pinMode(LED5, OUTPUT);
+  // set up LEDs
+  for (int i = 0; i < colWidth; i++)
+  {
+    for (int j = 0; j < colHeight; j++)
+    {
+      pinMode(ledPins[i][j], OUTPUT);
+      digitalWrite(ledPins[i][j], LOW);
+    }
+  }
   
-  digitalWrite(LED1, LOW);
-  digitalWrite(LED2, LOW);
-  digitalWrite(LED3, LOW);
-  digitalWrite(LED4, LOW);
-  digitalWrite(LED5, LOW);
-  
-  Serial.begin(9600);       // use the serial port
+  Serial.begin(9600);
 }
 
 void loop()
@@ -47,36 +33,21 @@ void loop()
   
   Serial.println(sensorReading);
 
-  if (sensorReading >= led1Thresh)
-    led1State =  HIGH;
-  else
-    led1State = LOW;
-  
-  if (sensorReading >= led2Thresh)
-    led2State =  HIGH;
-  else
-    led2State = LOW;
-  
-  if (sensorReading >= led3Thresh)
-    led3State =  HIGH;
-  else
-    led3State = LOW;
-    
-  if (sensorReading >= led4Thresh)
-    led4State =  HIGH;
-  else
-    led4State = LOW;
-
-  if (sensorReading >= led5Thresh)
-    led5State =  HIGH;
-  else
-    led5State = LOW;
-  
-  digitalWrite(LED1, led1State);
-  digitalWrite(LED2, led2State);
-  digitalWrite(LED3, led3State);
-  digitalWrite(LED4, led4State);
-  digitalWrite(LED5, led5State);
+  // light the LEDs row by row
+  for ( int j = 0; j < colHeight; j++)
+  {
+    for (int i = 0; i < colWidth; i++)
+    {
+      if (sensorReading >= ledThreshold[j])
+      {
+        digitalWrite(ledPins[i][j], HIGH);
+      }
+      else
+      {
+        digitalWrite(ledPins[i][j], LOW);
+      }
+    }
+  }
 
   delay(10);  // delay to avoid overloading the serial port buffer
 }
