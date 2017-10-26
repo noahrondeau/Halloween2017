@@ -1,15 +1,73 @@
 
 
-// constants
-const int sensor = A0; // the piezo is connected to analog pin 0
+/*=============== constants =================*/
+
+// Piezo Pin: analog 0
+const int sensor = A0;
+
+// Number of LED columns and rows
 const int colWidth = 2;
 const int colHeight = 5;
-const int ledPins[colWidth][colHeight] = {{2,3,4,5,6},{8,9,10,11,12}}; //GPIO pins used for LED matrix
-const int ledThreshold[colHeight] = {10,20,30,40,50}; // analog value thresholds for led activation
+
+//GPIO pins used for LED matrix
+const int ledPins[colWidth][colHeight] = {{2,3,4,5,6},{8,9,10,11,12}};
+
+// analog value thresholds for led activation
+const int ledThreshold[colHeight] = {10,20,30,40,50};
+
+// Delay for loop
+const int samplePeriod = 20; // milliseconds
 
 
-// these variables will change:
-int sensorReading = 0;      // variable to store the value read from the sensor pin
+/*=============== Class Defs =================*/
+
+/* Class Light:
+ * Manages updating an LED state
+ */
+class Light
+{
+public:
+  
+  /* Constructor
+   * @param pin: the pin the LED is connected to
+   * @param threshold: the analog input value the LED should trigger at
+   */
+  Light(int pin, int threshold)
+  : m_pin(pin)
+  , m_threshold(threshold)
+  , m_state(LOW)
+  {
+    pinMode(m_pin, OUTPUT);
+    digitalWrite(m_pin, LOW);
+  }
+  
+  /* function update
+   * @param value: a value to test against the LED's saved threshold value
+   *               results in turning on the LED if larger, off if smaller
+   */
+  void update(int value)
+  {
+    if (value >= m_threshold)
+      m_state = HIGH;
+    else
+      m_state = LOW;
+      
+    digitalWrite(m_pin, m_state);
+  }
+
+private:
+  int m_pin;
+  int m_threshold;
+  int m_state;
+};
+
+/*=============== Global Vars =================*/
+// piezo ADC mapped value, 0-1024
+int sensorReading = 0;
+
+// matrix of Light objects
+Light* lights[colWidth][colHeight];
+
 
 void setup()
 {
@@ -18,8 +76,7 @@ void setup()
   {
     for (int j = 0; j < colHeight; j++)
     {
-      pinMode(ledPins[i][j], OUTPUT);
-      digitalWrite(ledPins[i][j], LOW);
+      lights[i][j] = new Light(ledPins[i][j], ledThreshold[j]);
     }
   }
   
@@ -38,17 +95,10 @@ void loop()
   {
     for (int i = 0; i < colWidth; i++)
     {
-      if (sensorReading >= ledThreshold[j])
-      {
-        digitalWrite(ledPins[i][j], HIGH);
-      }
-      else
-      {
-        digitalWrite(ledPins[i][j], LOW);
-      }
+      lights[i][j]->update(sensorReading);
     }
   }
 
-  delay(10);  // delay to avoid overloading the serial port buffer
+  delay(samplePeriod);  // delay to avoid overloading the serial port buffer
 }
 
