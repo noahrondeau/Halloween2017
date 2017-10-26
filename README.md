@@ -10,15 +10,15 @@ On the software side, the primary goal is to make the eq rise and fall gracefull
 
 ## Completed:
 * Proof of concept:
-** Piezo circuit generates voltage, arduino can read analog data
-** LEDs can be lit in response to piezo voltage level
+  - Piezo circuit generates voltage, arduino can read analog data
+  - LEDs can be lit in response to piezo voltage level
 
 ## To do:
 * Implement amplifier for piezo to increase resolution
 * Implement smoothing of LED output in software; either:
-** Running average filter; or
-** Some count-based decay function.
-** Tradeoff: running average filter increases simplicity of code structure, but introduces delay in the actual ouput; count-based decay allows for instantaneous output with a decaying output (superseded by any greater input), but makes the code much more difficult to implement. The way I imagine doing it would require creating wrapper classes for the LED columns, implementing some form of persistent knowledge of which is the top-most lit LED. 
+  - Running average filter; or
+  - Some count-based decay function.
+  - Tradeoff: running average filter increases simplicity of code structure, but introduces delay in the actual ouput; count-based decay allows for instantaneous output with a decaying output (superseded by any greater input), but makes the code much more difficult to implement. The way I imagine doing it would require creating wrapper classes for the LED columns, implementing some form of persistent knowledge of which is the top-most lit LED. 
 * Make schematic
 * Solder protoboard
 * Assemble costume
