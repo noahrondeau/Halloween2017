@@ -2,7 +2,7 @@
 Dev Repo for my Halloween costume in 2017
 
 The costume is a cyberpunk get-up.
-The main technological aspect of the costume is a hal-face mask. The mask contains a piezoelectric transducer mounted in front of the mouth, which detects the volume of my speech. Two columns of LEDs are lit front bottom to top as a function of the volume, much like an EQ visualization. Other LEDs will also light up the mask but will remain static. The logic is powered by an Arduino.
+The main technological aspect of the costume is a half-face mask. The mask contains a piezoelectric transducer mounted in front of the mouth, which detects the volume of my speech. Two columns of LEDs are lit front bottom to top as a function of the volume, much like an EQ visualization. Other LEDs will also light up the mask but will remain static. The logic is powered by an Arduino.
 
 On the hardware side, the analog output of the Piezo requires amplification, in this case an LM358 in a constant gain configuration. This is necessary to increase the resolution of the sensor.
 
